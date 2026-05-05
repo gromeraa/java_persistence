@@ -3,6 +3,8 @@ package br.com.fiap.games.dao;
 import br.com.fiap.games.model.Game;
 import jakarta.persistence.EntityManager;
 
+import java.util.List;
+
 public class GameDao {
 
     private EntityManager em;
@@ -26,6 +28,19 @@ public class GameDao {
 
     public Game buscaGamePeloId(Game game) {
         return em.find(Game.class, game.getId());
+    }
+
+    public List<Game> listarTodosOsGames() {
+        String jpqlQuery = "SELECT g FROM Game g ORDER BY g.titulo ASC";
+        return em.createQuery(jpqlQuery, Game.class).getResultList();
+    }
+
+    public List<Game> buscarGamesPorFaixaDeValores(Double valorIncial, Double ValorFinal) {
+        String jpqlQuery = "SELECT g FROM Game g WHERE g.valor BETWEEN :valorInicial AND :valorFinal ORDER BY g.titulo ASC ";
+        return em.createQuery(jpqlQuery, Game.class)
+                .setParameter("valorInicial", valorIncial)
+                .setParameter("valorFinal", ValorFinal)
+                .getResultList();
     }
 
 }
